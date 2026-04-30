@@ -1,0 +1,106 @@
+﻿Unused files (49)
+postcss.config.mjs                       
+dist/assets/index-DNRwYmtb.js            
+dist/assets/index-Dr3gfbvz.css           
+utils/supabase/info.tsx                  
+supabase/functions/server/ai-service.ts  
+supabase/functions/server/index.ts       
+supabase/functions/server/kv_store.ts    
+src/app/components/ui/accordion.tsx      
+src/app/components/ui/alert-dialog.tsx   
+src/app/components/ui/alert.tsx          
+src/app/components/ui/aspect-ratio.tsx   
+src/app/components/ui/avatar.tsx         
+src/app/components/ui/breadcrumb.tsx     
+src/app/components/ui/calendar.tsx       
+src/app/components/ui/carousel.tsx       
+src/app/components/ui/chart.tsx          
+src/app/components/ui/checkbox.tsx       
+src/app/components/ui/collapsible.tsx    
+src/app/components/ui/command.tsx        
+src/app/components/ui/context-menu.tsx   
+src/app/components/ui/dialog.tsx         
+src/app/components/ui/drawer.tsx         
+src/app/components/ui/dropdown-menu.tsx  
+src/app/components/ui/form.tsx           
+src/app/components/ui/hover-card.tsx     
+src/app/components/ui/input-otp.tsx      
+src/app/components/ui/menubar.tsx        
+src/app/components/ui/navigation-menu.tsx
+src/app/components/ui/pagination.tsx     
+src/app/components/ui/popover.tsx        
+src/app/components/ui/progress.tsx       
+src/app/components/ui/radio-group.tsx    
+src/app/components/ui/resizable.tsx      
+src/app/components/ui/scroll-area.tsx    
+src/app/components/ui/select.tsx         
+src/app/components/ui/separator.tsx      
+src/app/components/ui/sheet.tsx          
+src/app/components/ui/sidebar.tsx        
+src/app/components/ui/skeleton.tsx       
+src/app/components/ui/slider.tsx         
+src/app/components/ui/sonner.tsx         
+src/app/components/ui/switch.tsx         
+src/app/components/ui/table.tsx          
+src/app/components/ui/tabs.tsx           
+src/app/components/ui/textarea.tsx       
+src/app/components/ui/toggle-group.tsx   
+src/app/components/ui/toggle.tsx         
+src/app/components/ui/tooltip.tsx        
+src/app/components/ui/use-mobile.ts      
+Unused dependencies (44)
+@emotion/react                   package.json:11:6
+@emotion/styled                  package.json:12:6
+@mui/icons-material              package.json:13:6
+@mui/material                    package.json:14:6
+@popperjs/core                   package.json:15:6
+@radix-ui/react-accordion        package.json:16:6
+@radix-ui/react-alert-dialog     package.json:17:6
+@radix-ui/react-aspect-ratio     package.json:18:6
+@radix-ui/react-avatar           package.json:19:6
+@radix-ui/react-checkbox         package.json:20:6
+@radix-ui/react-collapsible      package.json:21:6
+@radix-ui/react-context-menu     package.json:22:6
+@radix-ui/react-dialog           package.json:23:6
+@radix-ui/react-dropdown-menu    package.json:24:6
+@radix-ui/react-hover-card       package.json:25:6
+@radix-ui/react-menubar          package.json:27:6
+@radix-ui/react-navigation-menu  package.json:28:6
+@radix-ui/react-popover          package.json:29:6
+@radix-ui/react-progress         package.json:30:6
+@radix-ui/react-radio-group      package.json:31:6
+@radix-ui/react-scroll-area      package.json:32:6
+@radix-ui/react-select           package.json:33:6
+@radix-ui/react-separator        package.json:34:6
+@radix-ui/react-slider           package.json:35:6
+@radix-ui/react-switch           package.json:37:6
+@radix-ui/react-tabs             package.json:38:6
+@radix-ui/react-toggle           package.json:39:6
+@radix-ui/react-toggle-group     package.json:40:6
+@radix-ui/react-tooltip          package.json:41:6
+cmdk                             package.json:45:6
+date-fns                         package.json:46:6
+embla-carousel-react             package.json:47:6
+input-otp                        package.json:48:6
+motion                           package.json:50:6
+next-themes                      package.json:51:6
+react-day-picker                 package.json:53:6
+react-dnd                        package.json:54:6
+react-dnd-html5-backend          package.json:55:6
+react-hook-form                  package.json:57:6
+react-popper                     package.json:58:6
+react-resizable-panels           package.json:59:6
+react-responsive-masonry         package.json:60:6
+react-slick                      package.json:62:6
+vaul                             package.json:67:6
+Unresolved imports (2)
+/utils/supabase/info  src/app/components/QuizTake.tsx:11:42
+/utils/supabase/info  src/app/lib/supabase-client.ts:2:42  
+Unused exports (4)
+buttonVariants  src/app/components/ui/button.tsx:58:18
+CardFooter      src/app/components/ui/card.tsx:87:3   
+CardAction      src/app/components/ui/card.tsx:89:3   
+badgeVariants   src/app/components/ui/badge.tsx:46:17 
+Unused exported types (1)
+QuestionAnalysis  interface  src/app/components/AiCorrection.tsx:19:18
+Configuration hints (1)
