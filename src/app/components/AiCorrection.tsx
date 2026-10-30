@@ -1,11 +1,3 @@
-/**
- * AiCorrection — Rich per-question pedagogical correction display
- *
- * Renders the structured PedagogicalFeedback returned by /ai-feedback:
- *  • An encouraging overall message
- *  • Per-wrong-answer accordion with explanation / misconception / tip
- *  • A targeted study recommendation
- */
 
 import { useState } from 'react';
 import {
@@ -14,7 +6,7 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 
-// ─── Types (mirror server ai-service.tsx) ────────────────────────────────────
+
 
 interface QuestionAnalysis {
   questionIndex: number;
@@ -33,14 +25,14 @@ export interface PedagogicalFeedback {
   analyses: QuestionAnalysis[];
 }
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
+
 
 function AnalysisCard({ item, index }: { item: QuestionAnalysis; index: number }) {
-  const [open, setOpen] = useState(index === 0); // first card open by default
+  const [open, setOpen] = useState(index === 0);
 
   return (
     <div className="border border-red-500/20 bg-red-500/3 rounded-xl overflow-hidden">
-      {/* Header (always visible) */}
+
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-start gap-3 p-4 text-left hover:bg-red-500/5 transition-colors"
@@ -64,10 +56,10 @@ function AnalysisCard({ item, index }: { item: QuestionAnalysis; index: number }
         </span>
       </button>
 
-      {/* Expanded correction */}
+
       {open && (
         <div className="px-4 pb-4 space-y-3 border-t border-red-500/10">
-          {/* Explanation */}
+
           {item.explanation && (
             <div className="pt-3">
               <div className="flex items-center gap-2 mb-2">
@@ -80,7 +72,7 @@ function AnalysisCard({ item, index }: { item: QuestionAnalysis; index: number }
             </div>
           )}
 
-          {/* Misconception */}
+
           {item.misconception && (
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -93,7 +85,7 @@ function AnalysisCard({ item, index }: { item: QuestionAnalysis; index: number }
             </div>
           )}
 
-          {/* Tip */}
+
           {item.tip && (
             <div className="bg-primary/5 border border-primary/15 rounded-lg p-3">
               <div className="flex items-start gap-2">
@@ -111,7 +103,7 @@ function AnalysisCard({ item, index }: { item: QuestionAnalysis; index: number }
   );
 }
 
-// ─── Loading skeleton ─────────────────────────────────────────────────────────
+
 
 export function AiCorrectionSkeleton() {
   return (
@@ -138,7 +130,7 @@ export function AiCorrectionSkeleton() {
   );
 }
 
-// ─── Error state ──────────────────────────────────────────────────────────────
+
 
 export function AiCorrectionError({ onRetry, message }: { onRetry?: () => void, message?: string }) {
   return (
@@ -164,7 +156,7 @@ export function AiCorrectionError({ onRetry, message }: { onRetry?: () => void, 
   );
 }
 
-// ─── Quota exceeded state ─────────────────────────────────────────────────────
+
 
 export function AiCorrectionQuotaError({ onRetry }: { onRetry?: () => void }) {
   return (
@@ -195,7 +187,7 @@ export function AiCorrectionQuotaError({ onRetry }: { onRetry?: () => void }) {
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+
 
 interface AiCorrectionProps {
   feedback: PedagogicalFeedback;
@@ -207,7 +199,7 @@ export function AiCorrection({ feedback, onRetry }: AiCorrectionProps) {
 
   return (
     <div className="bg-zinc-900/80 border border-primary/25 rounded-2xl overflow-hidden">
-      {/* Header */}
+
       <div className="flex items-center justify-between px-5 py-4 border-b border-primary/15 bg-primary/5">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/15 border border-primary/25 flex items-center justify-center">
@@ -226,7 +218,7 @@ export function AiCorrection({ feedback, onRetry }: AiCorrectionProps) {
       </div>
 
       <div className="p-5 space-y-4">
-        {/* Overall message */}
+
         {feedback.overallMessage && (
           <div className="flex items-start gap-3 bg-white/3 rounded-xl p-4 border border-white/5">
             <div className="text-2xl shrink-0">💬</div>
@@ -234,7 +226,7 @@ export function AiCorrection({ feedback, onRetry }: AiCorrectionProps) {
           </div>
         )}
 
-        {/* Per-question analyses */}
+
         {feedback.analyses.length > 0 && (
           <div className="space-y-3">
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
@@ -246,7 +238,7 @@ export function AiCorrection({ feedback, onRetry }: AiCorrectionProps) {
           </div>
         )}
 
-        {/* Perfect score */}
+
         {feedback.analyses.length === 0 && (
           <div className="flex items-center gap-3 bg-green-500/5 border border-green-500/20 rounded-xl p-4">
             <CheckCircle2 className="w-6 h-6 text-green-400 shrink-0" />
@@ -254,7 +246,7 @@ export function AiCorrection({ feedback, onRetry }: AiCorrectionProps) {
           </div>
         )}
 
-        {/* Study recommendation */}
+
         {feedback.studyRecommendation && (
           <div className="border-t border-zinc-700/50 pt-4">
             <div className="flex items-start gap-3">

@@ -38,7 +38,7 @@ const formatQuizTitle = (id: string) => id.replace(/-/g, ' ').replace(/\b\w/g, l
 const formatDate = (ts: string) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 const formatFullDate = (ts: string) => new Date(ts).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-// Custom tooltip for recharts
+
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
@@ -92,11 +92,11 @@ export default function Results() {
     };
   })();
 
-  // Chart data: last 10 attempts reversed (oldest first)
-  // Use `label` (#1, #2 …) as the XAxis key — always unique even for same-day attempts
+
+
   const chartData = [...results].reverse().slice(-10).map((r, i) => ({
     label: `#${i + 1}`,
-    name:  formatDate(r.completed_at),   // kept for tooltip
+    name:  formatDate(r.completed_at),
     score: Math.round((r.score / r.total_questions) * 100),
   }));
 
@@ -159,7 +159,7 @@ export default function Results() {
         </div>
       ) : (
         <>
-          {/* Stats */}
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             {[
               { icon: Trophy, label: 'Total Taken', value: stats.total, suffix: 'quizzes', color: 'text-primary' },
@@ -178,7 +178,7 @@ export default function Results() {
             ))}
           </div>
 
-          {/* Chart */}
+
           {chartData.length > 1 && (
             <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-6 mb-8">
               <div className="flex items-center gap-2 mb-6">
@@ -205,7 +205,7 @@ export default function Results() {
             </div>
           )}
 
-          {/* History list */}
+
           <h2 className="text-xl font-bold text-white mb-4">Quiz History</h2>
           <div className="space-y-3">
             {results.map((result) => {
@@ -252,7 +252,7 @@ export default function Results() {
                               </div>
                             );
                           }
-                          // Plain text fallback
+
                           return (
                             <div className="mt-2 p-4 bg-primary/5 border border-primary/15 rounded-xl">
                               <p className="text-xs text-zinc-300 whitespace-pre-line leading-relaxed">{parsed}</p>
@@ -280,19 +280,19 @@ export default function Results() {
   );
 }
 
-// ─── Parse ai_feedback from DB (may be JSON string or plain text) ─────────────
+
 function parseAiFeedback(raw: string | null | undefined): PedagogicalFeedback | string | null {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw);
-    // If it has the expected structure, return as PedagogicalFeedback
+
     if (parsed && typeof parsed === 'object' && 'analyses' in parsed) {
       return parsed as PedagogicalFeedback;
     }
-    // Otherwise fall back to a simple string wrapping
+
     return raw;
   } catch {
-    // Plain text feedback (old format)
+
     return raw;
   }
 }

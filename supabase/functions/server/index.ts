@@ -6,7 +6,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const app = new Hono().basePath("/server");
 
-// Lazy initialization of Supabase client
+
 let supabaseInstance: any = null;
 function getSupabase() {
   if (!supabaseInstance) {
@@ -18,10 +18,10 @@ function getSupabase() {
   return supabaseInstance;
 }
 
-// Enable logger
+
 app.use('*', logger(console.log));
 
-// Enable CORS for all routes and methods
+
 app.use(
   "/*",
   cors({
@@ -33,12 +33,12 @@ app.use(
   }),
 );
 
-// Health check endpoint
+
 app.get("/health", (c) => {
   return c.json({ status: "ok" });
 });
 
-// Sign up endpoint
+
 app.post("/signup", async (c) => {
   try {
     const supabase = getSupabase();
@@ -61,7 +61,7 @@ app.post("/signup", async (c) => {
       return c.json({ error: error.message }, 400);
     }
     
-    // Store user profile in database
+
     if (data.user) {
       const { error: profileError } = await supabase
         .from('users')
@@ -88,7 +88,7 @@ app.post("/signup", async (c) => {
   }
 });
 
-// Get user profile (requires auth)
+
 app.get("/profile", async (c) => {
   try {
     const supabase = getSupabase();
@@ -107,7 +107,7 @@ app.get("/profile", async (c) => {
       .single();
     
     if (profileError || !profile) {
-      // Create profile if it doesn't exist
+
       const newProfile = {
         id: user.id,
         email: user.email || '',
@@ -153,7 +153,7 @@ app.get("/profile", async (c) => {
   }
 });
 
-// Update user profile (requires auth)
+
 app.put("/profile", async (c) => {
   try {
     const supabase = getSupabase();
@@ -183,7 +183,7 @@ app.put("/profile", async (c) => {
       return c.json({ error: `Failed to update profile: ${updateError.message}` }, 500);
     }
     
-    // Also update user metadata in Supabase Auth
+
     await supabase.auth.admin.updateUserById(user.id, {
       user_metadata: { name }
     });
@@ -203,7 +203,7 @@ app.put("/profile", async (c) => {
   }
 });
 
-// Get quizzes endpoint
+
 app.get("/quizzes", async (c) => {
   try {
     const supabase = getSupabase();
@@ -225,13 +225,13 @@ app.get("/quizzes", async (c) => {
   }
 });
 
-// Get quiz by ID with questions
+
 app.get("/quizzes/:id", async (c) => {
   try {
     const supabase = getSupabase();
     const id = c.req.param('id');
     
-    // Get quiz metadata
+
     const { data: quiz, error: quizError } = await supabase
       .from('quizzes')
       .select('*')
@@ -243,7 +243,7 @@ app.get("/quizzes/:id", async (c) => {
       return c.json({ error: 'Quiz not found' }, 404);
     }
     
-    // Get questions for this quiz
+
     const { data: questions, error: questionsError } = await supabase
       .from('questions')
       .select('*')
@@ -255,7 +255,7 @@ app.get("/quizzes/:id", async (c) => {
       return c.json({ error: `Failed to retrieve questions: ${questionsError.message}` }, 500);
     }
     
-    // Format questions to match frontend expectations
+
     const formattedQuestions = questions?.map(q => ({
       question: q.question_text,
       options: q.options,
@@ -275,12 +275,12 @@ app.get("/quizzes/:id", async (c) => {
   }
 });
 
-// Initialize quizzes with seed data (idempotent)
+
 app.post("/init-quizzes", async (c) => {
   try {
     const supabase = getSupabase();
     
-    // Check if quizzes already exist
+
     const { data: existing, error: checkError } = await supabase
       .from('quizzes')
       .select('id')
@@ -296,7 +296,7 @@ app.post("/init-quizzes", async (c) => {
       return c.json({ message: 'Quizzes already initialized', initialized: false });
     }
     
-    // Seed quiz data
+
     const quizzes = [
       {
         id: 'javascript-basics',
@@ -330,21 +330,21 @@ app.post("/init-quizzes", async (c) => {
       return c.json({ error: `Failed to insert quizzes: ${quizInsertError.message}` }, 500);
     }
     
-    // Seed questions
+
     const questions = [
-      // JavaScript Basics
+
       { quiz_id: 'javascript-basics', question_text: 'What is the correct way to declare a variable in JavaScript?', options: ['var x = 5;', 'variable x = 5;', 'v x = 5;', 'dim x = 5;'], correct_answer: 0, order_index: 1 },
       { quiz_id: 'javascript-basics', question_text: 'Which operator is used for strict equality comparison?', options: ['==', '===', '=', '!='], correct_answer: 1, order_index: 2 },
       { quiz_id: 'javascript-basics', question_text: 'What does DOM stand for?', options: ['Document Object Model', 'Data Object Model', 'Document Oriented Model', 'Digital Object Management'], correct_answer: 0, order_index: 3 },
       { quiz_id: 'javascript-basics', question_text: 'Which method is used to add an element at the end of an array?', options: ['push()', 'pop()', 'shift()', 'unshift()'], correct_answer: 0, order_index: 4 },
       { quiz_id: 'javascript-basics', question_text: 'What is the output of: typeof null?', options: ['null', 'undefined', 'object', 'number'], correct_answer: 2, order_index: 5 },
-      // Web Development
+
       { quiz_id: 'web-development', question_text: 'Which HTML tag is used for creating a hyperlink?', options: ['<link>', '<a>', '<href>', '<url>'], correct_answer: 1, order_index: 1 },
       { quiz_id: 'web-development', question_text: 'What does CSS stand for?', options: ['Computer Style Sheets', 'Cascading Style Sheets', 'Creative Style System', 'Colorful Style Sheets'], correct_answer: 1, order_index: 2 },
       { quiz_id: 'web-development', question_text: 'Which CSS property is used to change text color?', options: ['text-color', 'font-color', 'color', 'foreground-color'], correct_answer: 2, order_index: 3 },
       { quiz_id: 'web-development', question_text: 'What is the correct HTML for adding a background color?', options: ['<body bg="yellow">', '<body style="background-color:yellow;">', '<background>yellow</background>', '<body color="yellow">'], correct_answer: 1, order_index: 4 },
       { quiz_id: 'web-development', question_text: 'Which HTTP method is used to submit form data?', options: ['GET', 'POST', 'PUT', 'SUBMIT'], correct_answer: 1, order_index: 5 },
-      // React Fundamentals
+
       { quiz_id: 'react-fundamentals', question_text: 'What is JSX?', options: ['JavaScript XML', 'Java Syntax Extension', 'JSON XML', 'JavaScript Extension'], correct_answer: 0, order_index: 1 },
       { quiz_id: 'react-fundamentals', question_text: 'Which hook is used to manage state in functional components?', options: ['useEffect', 'useState', 'useContext', 'useReducer'], correct_answer: 1, order_index: 2 },
       { quiz_id: 'react-fundamentals', question_text: 'What is the purpose of useEffect hook?', options: ['To create side effects', 'To manage state', 'To create context', 'To optimize performance'], correct_answer: 0, order_index: 3 },
@@ -369,8 +369,8 @@ app.post("/init-quizzes", async (c) => {
   }
 });
 
-// Submit quiz result (requires auth)
-// NOTE: Only saves the score — does NOT call AI (use /ai-feedback for that).
+
+
 app.post("/results", async (c) => {
   try {
     const supabase = getSupabase();
@@ -413,21 +413,21 @@ app.post("/results", async (c) => {
   }
 });
 
-// ─── AI Feedback endpoint ─────────────────────────────────────────────────────
-// POST /ai-feedback
-// Body: { quizTitle, questions, answers, score }
-// Calls Gemini and returns structured per-question corrections.
+
+
+
+
 app.post("/ai-feedback", async (c) => {
   try {
     const geminiKey = Deno.env.get('GEMINI_API_KEY');
 
-    // ── API key guard ────────────────────────────────────────────────────────
+
     if (!geminiKey) {
       console.log('[AI Feedback] GEMINI_API_KEY not configured');
       return c.json({ error: 'AI service not configured — add GEMINI_API_KEY secret' }, 503);
     }
 
-    // ── Payload ───────────────────────────────────────────────────────────────
+
     const body = await c.req.json();
     const { quizTitle, questions, answers, score } = body;
 
@@ -437,7 +437,7 @@ app.post("/ai-feedback", async (c) => {
 
     console.log(`[AI Feedback] Generating feedback for "${quizTitle}" score=${score}/${questions.length}`);
 
-    // ── Generate feedback ─────────────────────────────────────────────────────
+
     const { feedback, error: aiError, quotaExceeded, retryAfterSeconds } = await generatePedagogicalFeedback(
       questions,
       answers,
@@ -463,7 +463,7 @@ app.post("/ai-feedback", async (c) => {
   }
 });
 
-// Get user results (requires auth)
+
 app.get("/results", async (c) => {
   try {
     const supabase = getSupabase();
@@ -486,7 +486,7 @@ app.get("/results", async (c) => {
       return c.json({ error: `Failed to retrieve results: ${error.message}` }, 500);
     }
     
-    // Format results to match frontend expectations
+
     const formattedResults = attempts?.map(attempt => ({
       userId: attempt.user_id,
       quizId: attempt.quiz_id,
@@ -505,12 +505,12 @@ app.get("/results", async (c) => {
   }
 });
 
-// Get leaderboard (with fallback if RPC not available)
+
 app.get("/leaderboard", async (c) => {
   try {
     const supabase = getSupabase();
 
-    // Try RPC first
+
     const { data: rpcData, error: rpcError } = await supabase.rpc('get_leaderboard', { limit_count: 10 });
     
     if (!rpcError && rpcData) {
@@ -527,7 +527,7 @@ app.get("/leaderboard", async (c) => {
       return c.json({ leaderboard: formattedLeaderboard });
     }
     
-    // Fallback: direct query
+
     console.log(`RPC failed (${rpcError?.message}), using direct query fallback`);
     const { data: users, error: usersError } = await supabase
       .from('users')

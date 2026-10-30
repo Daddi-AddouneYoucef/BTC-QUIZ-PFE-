@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+
     supabase.auth.getSession().then(({ data }) => {
       if (data?.session) {
         setAccessToken(data.session.access_token);
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    // Listen for auth state changes
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setAccessToken(session.access_token);
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) throw error;
 
-    // If session is available immediately (email confirmation disabled), create profile
+
     if (data.session?.user) {
       try {
         await supabase.from('users').upsert({
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { needsConfirmation: false };
     }
 
-    // No session = email confirmation required
+
     return { needsConfirmation: true };
   };
 
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    // Ensure profile exists after sign-in
+
     if (data.session?.user) {
       const { data: profile } = await supabase
         .from('users')

@@ -66,7 +66,7 @@ export default function Profile() {
       const { data, error: fetchErr } = await supabase.from('users').select('*').eq('id', user.id).single();
 
       if (fetchErr?.code === 'PGRST116') {
-        // Profile doesn't exist — create it
+
         const newProfile = {
           id: user.id, email: user.email,
           name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
@@ -156,11 +156,11 @@ export default function Profile() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left: Profile card */}
+
         <div className="lg:col-span-1 space-y-4">
-          {/* Avatar + Info */}
+
           <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-6">
-            {/* Avatar */}
+
             <div className="flex flex-col items-center text-center mb-5">
               <div className="relative mb-4">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-2xl font-black text-white shadow-xl shadow-primary/20">
@@ -205,7 +205,7 @@ export default function Profile() {
             )}
           </div>
 
-          {/* Account Info */}
+
           <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-5 space-y-4">
             <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Account</h3>
             {[
@@ -225,16 +225,16 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* Sign out */}
+
           <Button variant="ghost" onClick={handleSignOut}
             className="w-full border border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/40 rounded-xl">
             <LogOut className="w-4 h-4 mr-2" /> Sign Out
           </Button>
         </div>
 
-        {/* Right: Stats */}
+
         <div className="lg:col-span-2 space-y-4">
-          {/* Stats overview */}
+
           <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-white">Performance Overview</h3>
@@ -256,7 +256,7 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Rings */}
+
             {profile.quizzes_taken > 0 && (
               <div className="border-t border-zinc-700/50 pt-5">
                 <p className="text-xs text-zinc-500 mb-4 font-medium uppercase tracking-wider">Progress Rings</p>
@@ -269,7 +269,7 @@ export default function Profile() {
             )}
           </div>
 
-          {/* Achievements */}
+
           <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-5">
               <Award className="w-5 h-5 text-primary" />
@@ -299,7 +299,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Quick actions */}
+
           <div className="grid grid-cols-2 gap-3">
             <Link to="/quizzes">
               <Button variant="outline" className="w-full border-zinc-700 hover:bg-white/5 text-zinc-300 h-11">

@@ -111,7 +111,7 @@ export default function QuizList() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      {/* Header */}
+
       <div className="mb-10">
         <h1 className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tight">
           Available <span className="text-primary">Quizzes</span>
@@ -121,7 +121,7 @@ export default function QuizList() {
         </p>
       </div>
 
-      {/* Guest banner */}
+
       {!user && quizzes.length > 0 && (
         <div className="mb-6 flex flex-wrap items-center gap-4 bg-primary/5 border border-primary/20 rounded-2xl px-5 py-4">
           <div className="flex-grow">
@@ -136,7 +136,7 @@ export default function QuizList() {
         </div>
       )}
 
-      {/* Search + Filters */}
+
       <div className="mb-8 space-y-4">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -198,14 +198,14 @@ export default function QuizList() {
         </div>
       </div>
 
-      {/* Results count */}
+
       {hasFilters && (
         <p className="text-sm text-zinc-500 mb-5">
           Showing {filtered.length} of {quizzes.length} quizzes
         </p>
       )}
 
-      {/* Empty states */}
+
       {quizzes.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-20 h-20 bg-zinc-800 rounded-2xl flex items-center justify-center mx-auto mb-5">
@@ -232,7 +232,7 @@ export default function QuizList() {
           {filtered.map((quiz) => (
             <div key={quiz.id}
               className="group relative bg-zinc-800/40 border border-zinc-700/50 rounded-2xl overflow-hidden hover:border-primary/40 hover:bg-zinc-800/60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 flex flex-col">
-              {/* Top accent line */}
+
               <div className="h-0.5 bg-gradient-to-r from-primary/50 via-primary/20 to-transparent" />
 
               <div className="p-6 flex-grow">

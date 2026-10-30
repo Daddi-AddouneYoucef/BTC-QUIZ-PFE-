@@ -40,32 +40,32 @@ export default function QuizTake() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Quiz state
+
   const [quiz, setQuiz]                       = useState<Quiz | null>(null);
   const [loading, setLoading]                 = useState(true);
   const [error, setError]                     = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
 
-  // Submission
+
   const [submitting, setSubmitting]     = useState(false);
   const [showResults, setShowResults]   = useState(false);
   const [score, setScore]               = useState(0);
   const [savedAttemptId, setSavedAttemptId] = useState<string | null>(null);
 
-  // Timer
+
   const [timeLeft, setTimeLeft]       = useState(TIMER_SECONDS);
   const [timerActive, setTimerActive] = useState(false);
 
-  // AI correction
+
   const [aiFeedback, setAiFeedback] = useState<PedagogicalFeedback | null>(null);
   const [aiState, setAiState]       = useState<AiState>('idle');
   const [aiErrorMsg, setAiErrorMsg] = useState<string>('');
 
-  // UI
+
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // ─── Load quiz ─────────────────────────────────────────────────────────────
+
   useEffect(() => {
     if (!user) { navigate('/login'); return; }
     fetchQuiz();
@@ -97,7 +97,7 @@ export default function QuizTake() {
     }
   };
 
-  // ─── Timer ─────────────────────────────────────────────────────────────────
+
   useEffect(() => {
     if (!timerActive || showResults) return;
     if (timeLeft <= 0) { handleNextOrAdvance(); return; }
@@ -107,7 +107,7 @@ export default function QuizTake() {
 
   useEffect(() => { setTimeLeft(TIMER_SECONDS); }, [currentQuestion]);
 
-  // Ref to always hold the latest handleSubmit to avoid stale closures in timer
+
   const handleSubmitRef = useRef<() => void>(() => {});
   useEffect(() => { handleSubmitRef.current = handleSubmit; });
 
@@ -117,7 +117,7 @@ export default function QuizTake() {
     else handleSubmitRef.current();
   }, [currentQuestion, quiz]);
 
-  // ─── Keyboard shortcuts ────────────────────────────────────────────────────
+
   useEffect(() => {
     if (!quiz || showResults) return;
     const handler = (e: KeyboardEvent) => {
@@ -134,14 +134,14 @@ export default function QuizTake() {
     return () => window.removeEventListener('keydown', handler);
   }, [quiz, currentQuestion, selectedAnswers, showResults]);
 
-  // ─── Select answer ─────────────────────────────────────────────────────────
+
   const handleAnswerSelect = (answerIndex: number) => {
     const next = [...selectedAnswers];
     next[currentQuestion] = answerIndex;
     setSelectedAnswers(next);
   };
 
-  // ─── Submit quiz ────────────────────────────────────────────────────────
+
   const handleSubmit = async () => {
     if (!quiz) return;
     setTimerActive(false);
@@ -153,7 +153,7 @@ export default function QuizTake() {
     setSubmitting(true);
 
     try {
-      // 0. Ensure the user profile row exists (required by FK constraint on quiz_attempts)
+
       const { data: existingProfile } = await supabase
         .from('users')
         .select('id')
@@ -174,7 +174,7 @@ export default function QuizTake() {
         }
       }
 
-      // 1. Save the quiz attempt
+
       const { data: attempt, error: insertErr } = await supabase
         .from('quiz_attempts')
         .insert({
@@ -190,7 +190,7 @@ export default function QuizTake() {
       if (insertErr) {
         console.error('[Submit] Save error:', insertErr);
         toast.error('Impossible de sauvegarder le résultat');
-        // Still fetch AI feedback so the user isn't totally blocked, but it won't persist
+
         requestAiFeedback(null, quiz, selectedAnswers, correct);
       } else {
         const pct = Math.round((correct / quiz.questions.length) * 100);
@@ -200,7 +200,7 @@ export default function QuizTake() {
         if (attempt?.id) {
           setSavedAttemptId(attempt.id);
           console.log('[Submit] Attempt saved:', attempt.id);
-          // Launch AI feedback ONLY after DB save succeeds, passing the fresh attempt ID
+
           requestAiFeedback(attempt.id, quiz, selectedAnswers, correct);
         } else {
           requestAiFeedback(null, quiz, selectedAnswers, correct);
@@ -214,7 +214,7 @@ export default function QuizTake() {
     }
   };
 
-  // ─── Request AI correction ─────────────────────────────────────────────────
+
   const requestAiFeedback = async (
     attemptId: string | null,
     currentQuiz: Quiz,
@@ -225,7 +225,7 @@ export default function QuizTake() {
     setAiFeedback(null);
     setAiErrorMsg('');
     try {
-      // Key comes from .env (VITE_GEMINI_API_KEY) — restart dev server if missing
+
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
         console.error('[AI] VITE_GEMINI_API_KEY not set — please restart the dev server');
@@ -234,7 +234,7 @@ export default function QuizTake() {
         return;
       }
 
-      // Build wrong-answer list
+
       const wrongAnswers = currentQuiz.questions
         .map((q, i) => ({
           questionIndex: i,
@@ -245,7 +245,7 @@ export default function QuizTake() {
         }))
         .filter(w => !w.isCorrect);
 
-      // Perfect score
+
       if (wrongAnswers.length === 0) {
         setAiFeedback({
           overallMessage: '🎉 Score parfait ! Vous maîtrisez parfaitement ce sujet. Votre compréhension est exemplaire !',
@@ -282,8 +282,8 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { 
-              temperature: 0.3, 
+            generationConfig: {
+              temperature: 0.3,
               maxOutputTokens: 2048,
               responseMimeType: "application/json"
             },
@@ -308,28 +308,28 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
 
       const data = await res.json();
       const rawText: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!rawText) { 
+      if (!rawText) {
         setAiErrorMsg(`No text content in response. Raw data: ${JSON.stringify(data).slice(0, 300)}`);
-        setAiState('error'); 
-        return; 
+        setAiState('error');
+        return;
       }
 
-      // Extract JSON from the response
+
       let parsed: any;
-      try { 
-        // Try to find the JSON object if there's surrounding text, even though responseMimeType is set
+      try {
+
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         const jsonStr = jsonMatch ? jsonMatch[0] : rawText;
-        parsed = JSON.parse(jsonStr); 
+        parsed = JSON.parse(jsonStr);
       }
-      catch (parseErr: any) { 
-        console.error('[AI] JSON parse error, raw:', rawText.slice(0, 300)); 
+      catch (parseErr: any) {
+        console.error('[AI] JSON parse error, raw:', rawText.slice(0, 300));
         setAiErrorMsg(`JSON parse error: ${parseErr?.message}. Raw: ${rawText.slice(0, 200)}`);
-        setAiState('error'); 
-        return; 
+        setAiState('error');
+        return;
       }
 
-      // Merge AI analyses with question data
+
       const aiMap: Record<number, any> = {};
       for (const a of parsed.analyses ?? []) aiMap[a.questionIndex] = a;
 
@@ -356,7 +356,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
       setAiFeedback(feedback);
       setAiState('success');
 
-      // Persist feedback to DB non-blocking
+
       if (attemptId) {
         supabase.from('quiz_attempts')
           .update({ ai_feedback: JSON.stringify(feedback) })
@@ -376,11 +376,11 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
     requestAiFeedback(savedAttemptId, quiz, selectedAnswers, score);
   };
 
-  // ─── Computed ─────────────────────────────────────────────────────────────
+
   const timerColor = timeLeft > 20 ? 'text-green-400' : timeLeft > 10 ? 'text-amber-400' : 'text-red-400';
   const timerBg    = timeLeft > 20 ? 'bg-green-400'   : timeLeft > 10 ? 'bg-amber-400'   : 'bg-red-400';
 
-  // ── Loading ────────────────────────────────────────────────────────────────
+
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16">
@@ -395,7 +395,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
     );
   }
 
-  // ── Error ──────────────────────────────────────────────────────────────────
+
   if (error || !quiz) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16">
@@ -409,7 +409,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
     );
   }
 
-  // ── Results ────────────────────────────────────────────────────────────────
+
   if (showResults) {
     const pct  = Math.round((score / quiz.questions.length) * 100);
     const tier = pct === 100 ? 'perfect' : pct >= 80 ? 'great' : pct >= 60 ? 'good' : 'low';
@@ -423,7 +423,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 space-y-5">
 
-        {/* ── Score hero ── */}
+
         <div className={`relative rounded-3xl overflow-hidden border border-zinc-700/50 bg-gradient-to-b ${tierConfig.bg} bg-zinc-800/40`}>
           <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
           <div className="p-8 text-center">
@@ -443,7 +443,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
           </div>
         </div>
 
-        {/* ── AI Correction ── */}
+
         {aiState === 'loading' && <AiCorrectionSkeleton />}
         {aiState === 'success' && aiFeedback && (
           <AiCorrection feedback={aiFeedback} onRetry={retryAiFeedback} />
@@ -451,7 +451,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         {aiState === 'error' && <AiCorrectionError onRetry={retryAiFeedback} message={aiErrorMsg} />}
         {aiState === 'quota_exceeded' && <AiCorrectionQuotaError onRetry={retryAiFeedback} />}
 
-        {/* ── Question review ── */}
+
         <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl overflow-hidden">
           <div className="px-5 py-4 border-b border-zinc-700/50 flex items-center justify-between">
             <h2 className="font-semibold text-white">Récapitulatif des réponses</h2>
@@ -505,19 +505,19 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
     );
   }
 
-  // ── Quiz taking ──────────────────────────────────────────────────────────
+
   const q            = quiz.questions[currentQuestion];
   const answeredCount = selectedAnswers.filter(a => a !== -1).length;
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      {/* Back */}
+
       <button onClick={() => navigate('/quizzes')}
         className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-200 mb-6 transition-colors">
         <ChevronLeft className="w-4 h-4" /> Retour aux Quizzes
       </button>
 
-      {/* Header bar */}
+
       <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -546,7 +546,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         </div>
       </div>
 
-      {/* Question */}
+
       <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-6 mb-4">
         <h2 className="text-xl font-bold text-white mb-6 leading-relaxed">{q.question}</h2>
         <div className="space-y-3">
@@ -572,14 +572,14 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         </div>
       </div>
 
-      {/* Navigation */}
+
       <div className="flex items-center justify-between">
         <Button variant="outline" className="border-zinc-700 hover:bg-white/5 text-zinc-300"
           onClick={() => setCurrentQuestion(c => c - 1)} disabled={currentQuestion === 0}>
           <ChevronLeft className="w-4 h-4 mr-1" /> Précédent
         </Button>
 
-        {/* Dot navigator */}
+
         <div className="hidden sm:flex items-center gap-1.5">
           {quiz.questions.map((_, i) => (
             <button key={i} onClick={() => setCurrentQuestion(i)}
@@ -608,7 +608,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         )}
       </div>
 
-      {/* Keyboard hint */}
+
       <div className="mt-4 flex justify-center">
         <button onClick={() => setShowShortcuts(!showShortcuts)}
           className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-400 transition-colors">

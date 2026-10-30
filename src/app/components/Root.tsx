@@ -18,7 +18,7 @@ function Navigation() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close mobile menu on route change
+
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
   const handleSignOut = async () => {
@@ -53,7 +53,7 @@ function Navigation() {
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
+
             <Link to="/" className="flex items-center gap-2.5 group">
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all">
                 <Zap className="w-4 h-4 text-white" />
@@ -63,7 +63,7 @@ function Navigation() {
               </span>
             </Link>
 
-            {/* Desktop Nav */}
+
             <div className="hidden md:flex items-center gap-1">
               {navItems.map(({ to, label, icon: Icon }) => (
                 <Link key={to} to={to}
@@ -121,7 +121,7 @@ function Navigation() {
               )}
             </div>
 
-            {/* Mobile toggle */}
+
             <button
               className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all"
               onClick={() => setMobileOpen(!mobileOpen)}>
@@ -130,7 +130,7 @@ function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+
         {mobileOpen && (
           <div className="md:hidden border-t border-white/5 bg-zinc-900/95 backdrop-blur-xl">
             <div className="px-4 py-3 space-y-1">

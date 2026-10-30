@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Legend } from 'recharts';
 
 const supabase = getSupabaseClient();
-const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1'];
+const COLORS = ['#8b5cf5', '#23467e', '#73d3b3', '#d6c914', '#d85555', '#b31262', '#494bc5'];
 
 export default function AdminPanel() {
   const { user } = useAuth();
@@ -25,16 +25,16 @@ export default function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
-  // Feature: User Profile Modal
+
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
-  // Search & Filter states
+
   const [searchUser, setSearchUser] = useState('');
   const [searchQuiz, setSearchQuiz] = useState('');
   const [searchAttempt, setSearchAttempt] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Feature: Quick Filters
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Add/Edit Quiz states
+
   const [editingQuizId, setEditingQuizId] = useState<string | null>(null);
   const [newQuiz, setNewQuiz] = useState({
     title: '', description: '', category: '', difficulty: 'Facile',
@@ -44,7 +44,7 @@ export default function AdminPanel() {
   const [aiPrompt, setAiPrompt] = useState('');
   const [generatingAI, setGeneratingAI] = useState(false);
 
-  // Feature: System Health
+
   const [sysHealth, setSysHealth] = useState({ db: 'checking', api: 'checking' });
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function AdminPanel() {
       if (usersData) setUsersList(usersData);
       if (quizzesData) {
         setQuizzesList(quizzesData);
-        // Feature: Category Distribution Pie Chart
+
         const catCounts = quizzesData.reduce((acc, q) => { acc[q.category] = (acc[q.category] || 0) + 1; return acc; }, {} as Record<string, number>);
         setCategoryData(Object.entries(catCounts).map(([name, value]) => ({ name, value })));
       }
@@ -98,7 +98,7 @@ export default function AdminPanel() {
       if (attemptsData && usersData) {
         setAttemptsList(attemptsData);
 
-        // Active Users metric (users with attempts)
+
         const activeIds = new Set(attemptsData.map(a => a.user_id));
         setStats({ users: uRes.count || 0, quizzes: qRes.count || 0, attempts: aRes.count || 0, activeUsers: activeIds.size });
 
@@ -127,10 +127,10 @@ export default function AdminPanel() {
     } catch (error) { toast.error('Failed to load admin data'); } finally { setLoading(false); }
   };
 
-  // Feature: Danger Zone Actions
+
   const resetLeaderboard = async () => {
     if (!confirm('DANGER: This will permanently set all user scores to 0. Are you absolutely sure?')) return;
-    const { error } = await supabase.from('users').update({ total_score: 0, quizzes_taken: 0 }).neq('id', '0'); // update all
+    const { error } = await supabase.from('users').update({ total_score: 0, quizzes_taken: 0 }).neq('id', '0');
     if (error) toast.error('Failed to reset leaderboard'); else { toast.success('Leaderboard reset to zero.'); fetchData(); }
   };
 
@@ -152,7 +152,7 @@ export default function AdminPanel() {
     toast.success('User deleted'); fetchData();
   };
 
-  // Feature: Export functions
+
   const exportCSV = (type: 'attempts' | 'users' | 'quizzes') => {
     let headers = ""; let rows = ""; let filename = "";
     if (type === 'attempts') {
@@ -173,7 +173,7 @@ export default function AdminPanel() {
     const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
   };
 
-  // Feature: Edit Quiz Flow
+
   const startEditingQuiz = async (quiz: any) => {
     setLoading(true);
     const { data: questions } = await supabase.from('questions').select('*').eq('quiz_id', quiz.id).order('order_index', { ascending: true });
@@ -218,12 +218,12 @@ export default function AdminPanel() {
       let quizId = editingQuizId;
 
       if (editingQuizId) {
-        // Update existing quiz
+
         await supabase.from('quizzes').update({ title: newQuiz.title, description: newQuiz.description, category: newQuiz.category, difficulty: newQuiz.difficulty }).eq('id', editingQuizId);
-        // Wipe old questions and insert new ones
+
         await supabase.from('questions').delete().eq('quiz_id', editingQuizId);
       } else {
-        // Insert new quiz
+
         const { data: qData, error: qErr } = await supabase.from('quizzes').insert({ title: newQuiz.title, description: newQuiz.description, category: newQuiz.category, difficulty: newQuiz.difficulty }).select().single();
         if (qErr) throw qErr;
         quizId = qData.id;
@@ -256,7 +256,7 @@ export default function AdminPanel() {
     );
   }
 
-  // Filters
+
   const filteredUsers = usersList.filter(u => (u.name || '').toLowerCase().includes(searchUser.toLowerCase()) || (u.email || '').toLowerCase().includes(searchUser.toLowerCase()));
   const filteredQuizzes = quizzesList.filter(q => (q.title || '').toLowerCase().includes(searchQuiz.toLowerCase()) && (!selectedCategory || q.category === selectedCategory));
   const filteredAttempts = attemptsList.filter(a => (a.users?.name || '').toLowerCase().includes(searchAttempt.toLowerCase()) || (a.quizzes?.title || '').toLowerCase().includes(searchAttempt.toLowerCase()));
@@ -270,7 +270,7 @@ export default function AdminPanel() {
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar */}
+
         <div className="w-full md:w-64 space-y-2 shrink-0">
           {[{ id: 'overview', label: 'Overview', icon: Activity }, { id: 'users', label: 'Users', icon: Users }, { id: 'quizzes', label: 'Quizzes', icon: BookOpen }, { id: 'attempts', label: 'Recent Attempts', icon: Shield }, { id: 'settings', label: 'Settings', icon: Settings }].map((tab) => (
             <button key={tab.id} onClick={() => { setActiveTab(tab.id as any); if (tab.id !== 'add_quiz') setEditingQuizId(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${activeTab === tab.id ? 'bg-primary/20 text-primary border border-primary/20' : 'bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 border border-transparent'}`}>
@@ -283,10 +283,10 @@ export default function AdminPanel() {
           </button>
         </div>
 
-        {/* Content Area */}
+
         <div className="flex-1 bg-zinc-900/40 border border-zinc-800/50 rounded-2xl p-6 overflow-hidden min-h-[600px]">
 
-          {/* OVERVIEW */}
+
           {activeTab === 'overview' && (
             <div className="space-y-6 animate-in fade-in duration-300">
               <h2 className="text-xl font-semibold text-white mb-4">Platform Overview</h2>
@@ -342,7 +342,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* USERS */}
+
           {activeTab === 'users' && (
             <div className="flex flex-col h-full animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
@@ -374,7 +374,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* QUIZZES */}
+
           {activeTab === 'quizzes' && (
             <div className="flex flex-col h-full animate-in fade-in duration-300">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 gap-4">
@@ -382,7 +382,7 @@ export default function AdminPanel() {
                 <div className="flex flex-wrap gap-2">
                   <div className="relative"><Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" /><input type="text" placeholder="Search quizzes..." value={searchQuiz} onChange={(e) => setSearchQuiz(e.target.value)} className="w-full sm:w-48 bg-zinc-800/50 border border-zinc-700 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-primary" /></div>
 
-                  {/* Category Quick Filters */}
+
                   <div className="relative">
                     <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
                     <select value={selectedCategory || ''} onChange={(e) => setSelectedCategory(e.target.value || null)} className="w-full sm:w-36 bg-zinc-800/50 border border-zinc-700 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none appearance-none">
@@ -417,7 +417,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* ATTEMPTS */}
+
           {activeTab === 'attempts' && (
             <div className="flex flex-col h-full animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
@@ -447,7 +447,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* ADD/EDIT QUIZ */}
+
           {activeTab === 'add_quiz' && (
             <div className="max-w-3xl mx-auto pb-12 animate-in slide-in-from-right-4 duration-300">
               <div className="flex items-center justify-between mb-6">
@@ -504,7 +504,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* SETTINGS (Danger Zone & Health) */}
+
           {activeTab === 'settings' && (
             <div className="max-w-3xl mx-auto animate-in fade-in duration-300">
               <h2 className="text-2xl font-bold text-white mb-6">System Settings</h2>
@@ -547,7 +547,7 @@ export default function AdminPanel() {
         </div>
       </div>
 
-      {/* Feature: User Profile Modal */}
+
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">

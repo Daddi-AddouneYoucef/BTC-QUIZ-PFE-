@@ -37,7 +37,7 @@ export default function Login() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex">
-      {/* Left panel — decorative */}
+
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-gradient-to-br from-primary/20 via-zinc-900 to-zinc-900 border-r border-zinc-800 p-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(249,115,22,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.03)_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
@@ -71,10 +71,10 @@ export default function Login() {
         <p className="relative text-xs text-zinc-600">© 2026 QuizMaster. Built with React & Supabase.</p>
       </div>
 
-      {/* Right panel — form */}
+
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-zinc-900">
         <div className="w-full max-w-sm">
-          {/* Mobile logo */}
+
           <div className="flex lg:hidden items-center justify-center gap-2 mb-8">
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
               <Zap className="w-4 h-4 text-white" />

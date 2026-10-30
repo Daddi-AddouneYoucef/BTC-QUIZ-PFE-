@@ -58,7 +58,7 @@ export default function Leaderboard() {
         return;
       }
 
-      // Fallback
+
       const { data: users, error: uErr } = await supabase
         .from('users').select('id, name, email, quizzes_taken, total_score')
         .gt('quizzes_taken', 0).order('total_score', { ascending: false }).limit(10);
@@ -97,7 +97,7 @@ export default function Leaderboard() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-      {/* Header */}
+
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-sm font-medium mb-6">
           <Star className="w-3.5 h-3.5" /> Hall of Fame
@@ -138,7 +138,7 @@ export default function Leaderboard() {
 
       {!error && leaderboard.length > 0 && (
         <>
-          {/* Podium */}
+
           {top3.length >= 2 && (
             <div className="mb-10">
               <div className="flex items-end justify-center gap-3 sm:gap-5 mb-0">
@@ -147,7 +147,7 @@ export default function Leaderboard() {
                   if (!entry) return <div key={pos} className="w-24 sm:w-32" />;
                   return (
                     <div key={pos} className="flex flex-col items-center gap-3 w-24 sm:w-32">
-                      {/* Avatar */}
+
                       <div className="relative">
                         <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br ${color} border-2 ${border} flex items-center justify-center text-xl font-black text-white shadow-lg`}>
                           {getInitials(entry.name)}
@@ -158,7 +158,7 @@ export default function Leaderboard() {
                         <p className="font-bold text-white text-sm truncate max-w-full">{entry.name.split(' ')[0]}</p>
                         <p className={`text-xs font-black ${labelColor}`}>{entry.totalScore} pts</p>
                       </div>
-                      {/* Podium block */}
+
                       <div className={`w-full ${height} rounded-t-xl bg-gradient-to-b ${color} border ${border} flex items-center justify-center`}>
                         <span className={`text-2xl font-black ${labelColor}`}>{label}</span>
                       </div>
@@ -166,14 +166,14 @@ export default function Leaderboard() {
                   );
                 })}
               </div>
-              {/* Stage */}
+
               <div className="h-4 bg-gradient-to-b from-zinc-700/50 to-zinc-800 border border-zinc-700/50 border-t-0 rounded-b-xl mx-0" />
             </div>
           )}
 
-          {/* Full list */}
+
           <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-2xl overflow-hidden mb-8">
-            {/* Header row */}
+
             <div className="px-5 py-3 border-b border-zinc-700/50 flex items-center gap-4 text-xs text-zinc-500 font-medium">
               <span className="w-8 text-center">Rank</span>
               <span className="flex-grow">Player</span>
@@ -190,7 +190,7 @@ export default function Leaderboard() {
                 return (
                   <div key={entry.rank}
                     className={`flex items-center gap-4 px-5 py-4 border-l-2 transition-all ${style.row} ${isMe ? 'ring-1 ring-primary/20' : ''}`}>
-                    {/* Rank */}
+
                     <div className="w-8 text-center">
                       {entry.rank <= 3 ? (
                         entry.rank === 1 ? <Crown className={`w-5 h-5 mx-auto ${style.num}`} /> :
@@ -201,7 +201,7 @@ export default function Leaderboard() {
                       )}
                     </div>
 
-                    {/* Player */}
+
                     <div className="flex-grow min-w-0">
                       <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300 shrink-0">
@@ -212,7 +212,7 @@ export default function Leaderboard() {
                             <span className="font-semibold text-white text-sm truncate">{entry.name}</span>
                             {isMe && <span className="text-[10px] bg-primary/20 text-primary border border-primary/30 px-1.5 py-0.5 rounded-full font-bold shrink-0">You</span>}
                           </div>
-                          {/* Score bar */}
+
                           <div className="hidden sm:block mt-1.5 w-32 h-1 bg-zinc-700 rounded-full overflow-hidden">
                             <div className={`h-full rounded-full ${style.bar}`} style={{ width: `${Math.round((entry.totalScore / maxScore) * 100)}%` }} />
                           </div>
@@ -233,7 +233,7 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          {/* Refresh + Guest CTA */}
+
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <Button variant="ghost" size="sm" onClick={fetchLeaderboard} className="text-zinc-500 hover:text-zinc-200">
               <RefreshCw className="w-4 h-4 mr-1.5" /> Refresh

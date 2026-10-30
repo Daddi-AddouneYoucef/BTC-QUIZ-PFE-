@@ -1,6 +1,4 @@
-/**
- * AI Service — Pedagogical feedback powered by Google Gemini API
- */
+
 
 export interface QuestionAnalysis {
   questionIndex: number;
@@ -34,7 +32,7 @@ interface QuestionInput {
 
 const GEMINI_MODEL = 'gemini-2.0-flash';
 
-// ─── Build prompt ────────────────────────────────────────────────────────────
+
 function buildPrompt(
   wrongAnswers: Array<{
     questionIndex: number;
@@ -79,7 +77,7 @@ Réponds UNIQUEMENT avec un JSON valide respectant ce format exact (sans markdow
 }`;
 }
 
-// ─── Strip markdown code fences ──────────────────────────────────────────────
+
 function extractJson(raw: string): string {
   const match = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
   if (match) return match[1].trim();
@@ -89,7 +87,7 @@ function extractJson(raw: string): string {
   return raw.trim();
 }
 
-// ─── Main export ─────────────────────────────────────────────────────────────
+
 export async function generatePedagogicalFeedback(
   questions: QuestionInput[],
   answers: number[],
@@ -98,7 +96,7 @@ export async function generatePedagogicalFeedback(
   quizTitle = 'Quiz',
 ): Promise<FeedbackResult> {
   try {
-    // 1. Identify wrong answers
+
     const wrongAnswers = questions
       .map((q, i) => ({
         questionIndex: i,
@@ -109,7 +107,7 @@ export async function generatePedagogicalFeedback(
       }))
       .filter((item) => !item.isCorrect);
 
-    // 2. Perfect score — no API call needed
+
     if (wrongAnswers.length === 0) {
       return {
         feedback: {
@@ -125,11 +123,11 @@ export async function generatePedagogicalFeedback(
       };
     }
 
-    // 3. Build prompt
+
     const prompt = buildPrompt(wrongAnswers, score, questions.length, quizTitle);
     console.log(`[AI Service] Calling Gemini API (${GEMINI_MODEL}) for ${wrongAnswers.length} wrong answer(s)`);
 
-    // 4. Call Gemini generateContent API
+
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${geminiApiKey}`;
 
     const doFetch = () =>
@@ -147,7 +145,7 @@ export async function generatePedagogicalFeedback(
 
     let response = await doFetch();
 
-    // Handle 429 — rate limit
+
     if (response.status === 429) {
       const retryBody     = await response.json().catch(() => ({}));
       const retryAfterHdr = response.headers.get('retry-after');
@@ -168,18 +166,18 @@ export async function generatePedagogicalFeedback(
       const errText = await response.text();
       const reason  = `Gemini API ${response.status}: ${errText}`;
       console.log(`[AI Service] ${reason}`);
-      // Detect resource-exhausted quota errors
+
       if (response.status === 429 || errText.includes('RESOURCE_EXHAUSTED') || errText.includes('quota')) {
         return { feedback: null, error: reason, quotaExceeded: true, retryAfterSeconds: 60 };
       }
       return { feedback: null, error: reason };
     }
 
-    // 5. Parse Gemini response
+
     const data = await response.json();
     console.log(`[AI Service] Raw response (truncated): ${JSON.stringify(data).slice(0, 500)}`);
 
-    // Gemini response shape: data.candidates[0].content.parts[0].text
+
     const rawText: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!rawText) {
@@ -188,7 +186,7 @@ export async function generatePedagogicalFeedback(
       return { feedback: null, error: reason };
     }
 
-    // 6. Parse JSON
+
     const jsonString = extractJson(rawText);
     let parsed: any;
     try {
@@ -199,7 +197,7 @@ export async function generatePedagogicalFeedback(
       return { feedback: null, error: reason };
     }
 
-    // 7. Merge AI analysis with question data
+
     const analysesMap: Record<number, any> = {};
     for (const a of parsed.analyses ?? []) {
       analysesMap[a.questionIndex] = a;

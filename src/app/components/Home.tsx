@@ -30,20 +30,20 @@ export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] overflow-hidden">
 
-      {/* ── Hero ─────────────────────────────────────────── */}
+
       <section className="relative py-28 sm:py-36 overflow-hidden">
-        {/* Gradient backdrop */}
+
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800" />
-        {/* Glow orbs */}
+
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/8 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-orange-600/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Grid pattern */}
+
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          {/* Badge */}
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8">
             <Zap className="w-3.5 h-3.5" />
             AI-Powered Quiz Platform
@@ -91,7 +91,7 @@ export default function Home() {
             )}
           </div>
 
-          {/* Trust row */}
+
           <div className="mt-12 flex flex-wrap justify-center items-center gap-6 text-sm text-zinc-500">
             {['No credit card required', 'Free to use', 'AI-powered feedback'].map(t => (
               <span key={t} className="flex items-center gap-1.5">
@@ -102,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Stats bar ────────────────────────────────────── */}
+
       <div className="border-y border-zinc-800 bg-zinc-900/80">
         <div className="max-w-4xl mx-auto px-4 py-8 grid grid-cols-3 divide-x divide-zinc-800">
           {[
@@ -118,7 +118,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ── Categories ───────────────────────────────────── */}
+
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-3">Quiz Topics</p>
@@ -149,7 +149,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── How it works ────────────────────────────────── */}
+
       <section className="py-20 bg-zinc-900/50 border-y border-zinc-800">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
@@ -158,7 +158,7 @@ export default function Home() {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-8 relative">
-            {/* connector line */}
+
             <div className="hidden sm:block absolute top-8 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
 
             {STEPS.map(({ number, title, description }) => (
@@ -174,7 +174,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────── */}
+
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-3">Everything you need</p>
@@ -198,7 +198,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────── */}
+
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-orange-500/5 to-amber-500/10" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:72px_72px]" />
@@ -248,7 +248,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────────── */}
+
       <footer className="border-t border-zinc-800 bg-zinc-900/80 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
